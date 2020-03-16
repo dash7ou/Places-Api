@@ -2,7 +2,7 @@ import React from 'react';
 
 import './Avatar.css';
 
-const Avatar = {className, image, width, style, alt} => {
+const Avatar = ({className, image, width, style, alt}) => {
   return (
     <div className={`avatar ${className}`} style={style}>
       <img
