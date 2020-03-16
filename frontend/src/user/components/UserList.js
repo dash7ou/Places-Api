@@ -8,7 +8,7 @@ import "./UserList.css";
 const UserList = ({ items })=>{
     return (
         items && items.length > 0 ? (
-            <ul>
+            <ul className="users-list">
                 {items.map(user => <UserItem key={user._id} userItem={user}/>)}
             </ul>
         ):(
