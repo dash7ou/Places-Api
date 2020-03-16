@@ -18,11 +18,11 @@ const MainNavigation = ({})=>{
             {sideDrawer && (
                 <BackDrop onClick={onOpenDrawer}/>
             )}
-            {sideDrawer && (<SideDrawer>
+            <SideDrawer show={sideDrawer} onClick={onOpenDrawer}>
                 <nav className="main-navigation__drawer-nav">
                     <NavLinks />
                 </nav>
-            </SideDrawer>)}
+            </SideDrawer>
             <MainHeader>
                 <button className="main-navigation__menu-btn" onClick={onOpenDrawer}>
                     <span />
