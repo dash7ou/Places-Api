@@ -18,7 +18,7 @@ const ModalOverlay = ({
 	footer
 }) => {
 	const onSubmitFormAction = (event) => {
-		onSubmitForm ? onSubmitForm : event.preventDefault;
+		return onSubmitForm ? ()=> onSubmitForm : ()=>event.preventDefault();
 	};
 
 	const content = (
@@ -35,7 +35,7 @@ const ModalOverlay = ({
 	return ReactDOM.createPortal(content, document.getElementById('modal-hook'));
 };
 
-const Modal = ({ show, onCancel, props }) => {
+const Modal = ({ show, onCancel, ...props}) => {
 	return (
 		<Fragment>
 			{show && <BackDrop onClick={onCancel} />}
