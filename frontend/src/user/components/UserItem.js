@@ -9,6 +9,7 @@ import "./UserItem.css";
 
 const UserItem = ({userItem})=>{
     const {
+        _id,
         image,
         name,
         placeCount
@@ -16,7 +17,7 @@ const UserItem = ({userItem})=>{
     return(
         <li className="user-item">
             <Card className="user-item__content">
-                <Link to="">
+                <Link to={`${_id}/places`}>
                     <div className="user-item__image">
                         <Avatar image={image} alt={name} />
                     </div>
