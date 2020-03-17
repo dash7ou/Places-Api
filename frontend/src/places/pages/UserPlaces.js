@@ -12,7 +12,7 @@ const items = [
         lat: 40.7484405,
         lng: -73.9878584
       },
-      creator: 'u1'
+      creator: '1'
     },
     {
       _id: 'p2',
@@ -24,13 +24,13 @@ const items = [
         lat: 40.7484405,
         lng: -73.9878584
       },
-      creator: 'u2'
+      creator: '2'
     }
 ];
 
 const UserPlaces = ()=>{
     const userId = useParams().userId;
-    const loadPlaces = items.filter(item => item._id === userId)
+    const loadPlaces = items.filter(item => item.creator === userId)
     return <PlaceList items={loadPlaces}/>
 }
 
