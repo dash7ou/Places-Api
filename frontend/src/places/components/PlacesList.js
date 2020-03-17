@@ -1,6 +1,7 @@
 import React from "react";
 
 import Card from "../../shared/components/UIElements/Card";
+import PlaceItem from "./PlaceItem";
 
 import "./PlacesList.css";
 
@@ -26,3 +27,5 @@ const PlacesList = ({ items })=>{
         )
     )
 }
+
+export default PlacesList;
