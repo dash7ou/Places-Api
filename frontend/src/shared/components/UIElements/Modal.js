@@ -18,7 +18,7 @@ const ModalOverlay = ({
 	footer
 }) => {
 	const onSubmitFormAction = (event) => {
-		return onSubmitForm ? ()=> onSubmitForm : ()=>event.preventDefault();
+		return onSubmitForm ? onSubmitForm : event.preventDefault();
 	};
 
 	const content = (
