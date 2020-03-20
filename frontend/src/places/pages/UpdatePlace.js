@@ -1,10 +1,10 @@
-import React from 'react';
+import React,{ useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 import Button from '../../shared/components/FormElements/Button';
 import Input from '../../shared/components/FormElements/Input';
 import { VALIDATOR_REQUIRE, VALIDATOR_MINLENGTH } from '../../shared/utils/validators';
-import {useForm, useFrom} from "../../shared/hooks/form-hook"
+import { useFrom } from "../../shared/hooks/form-hook"
 
 import "./PlaceForm.css"
 
@@ -40,7 +40,7 @@ const items = [
 const UpdatePlace = () => {
 	const placeId = useParams().placeId;
 
-	const [ fromState, inputHandler ] = useFrom({
+	const [ fromState, inputHandler, setFromData ] = useFrom({
 		title:{
 			value: "",
 			isValid: false
@@ -53,6 +53,19 @@ const UpdatePlace = () => {
 
 	const { title, description } = items.find((place) => place._id === placeId);
 
+	useEffect(()=>{
+		setFromData({
+			title:{
+				value: title,
+				isValid: true
+			},
+			description:{
+				value: description,
+				isValid: true
+			}
+		}, true)
+	}, [setFromData, title, description])
+
 
 	const placeUpdateSubmitHandler = event =>{
 		event.preventDefault();
@@ -60,7 +73,7 @@ const UpdatePlace = () => {
 	}
 
 	return (
-		title && description ? (
+		fromState.inputs.description.value ? (
 			<form className='place-form' onSubmit={placeUpdateSubmitHandler}>
 			<Input
 				id='title'
