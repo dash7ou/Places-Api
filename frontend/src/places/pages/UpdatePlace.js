@@ -76,7 +76,7 @@ const UpdatePlace = () => {
 				value={fromState.inputs.description.value}
 				valid={fromState.inputs.description.isValid}
 			/>
-			<Button type='submit' disabled={true}>
+			<Button type='submit' disabled={!fromState.isValid}>
 				Update place
 			</Button>
 		</form>
