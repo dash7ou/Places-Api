@@ -50,11 +50,16 @@ const UpdatePlace = () => {
 			value: description,
 			isValid: true
 		}
-	}, true)
+	}, true);
+
+	const placeUpdateSubmitHandler = event =>{
+		event.preventDefault();
+		console.log(fromState.inputs)
+	}
 
 	return (
 		title && description ? (
-			<form className='place-form' >
+			<form className='place-form' onSubmit={placeUpdateSubmitHandler}>
 			<Input
 				id='title'
 				type='text'
