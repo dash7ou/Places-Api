@@ -39,18 +39,20 @@ const items = [
 
 const UpdatePlace = () => {
 	const placeId = useParams().placeId;
-	const { title, description } = items.find((place) => place._id === placeId);
 
 	const [ fromState, inputHandler ] = useFrom({
 		title:{
-			value: title,
-			isValid: true
+			value: "",
+			isValid: false
 		},
 		description:{
-			value: description,
-			isValid: true
+			value: "",
+			isValid: false
 		}
-	}, true);
+	}, false);
+
+	const { title, description } = items.find((place) => place._id === placeId);
+
 
 	const placeUpdateSubmitHandler = event =>{
 		event.preventDefault();
