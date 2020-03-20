@@ -4,7 +4,7 @@ import Input from '../../shared/components/FormElements/Input';
 import Button from '../../shared/components/FormElements/Button';
 import { VALIDATOR_REQUIRE, VALIDATOR_MINLENGTH } from '../../shared/utils/validators';
 
-import './NewPlace.css';
+import './PlaceForm.css';
 
 const formReducer = (state, action) => {
 	switch (action.type) {
@@ -44,7 +44,7 @@ const NewPlace = () => {
 		},
 		isValid: false
 	});
-	const titleInputHandler = useCallback((id, value, isValid) => {
+	const inputHandler = useCallback((id, value, isValid) => {
 		dispatch({
 			type: 'INPUT_CHANGE',
 			value,
@@ -52,14 +52,7 @@ const NewPlace = () => {
 			inputId: id
 		});
 	}, []);
-	const descriptionInputHandler = useCallback((id, value, isValid) => {
-		dispatch({
-			type: 'INPUT_CHANGE',
-			value,
-			isValid,
-			inputId: id
-		});
-	}, []);
+
 
 	const placeSubmitHandler = (event) => {
 		event.preventDefault();
@@ -74,16 +67,15 @@ const NewPlace = () => {
 				element='input'
 				validators={[ VALIDATOR_REQUIRE() ]}
 				errorText='Please enter a vaild title.'
-				onInput={titleInputHandler}
+				onInput={inputHandler}
 			/>
 			<Input
-				id='title'
-				type='text'
-				label='Title'
-				element='input'
-				validators={[ VALIDATOR_REQUIRE() ]}
-				errorText='Please enter a vaild title.'
-				onInput={titleInputHandler}
+				id='description'
+				label='Description'
+				element='textarea'
+				validators={[ VALIDATOR_MINLENGTH(5) ]}
+				errorText='Please enter a vaild description at least 5 char.'
+				onInput={inputHandler}
 			/>
 			<Input
 				id='address'
@@ -91,7 +83,7 @@ const NewPlace = () => {
 				label='Address'
 				errorText='Please enter a valid address'
 				validators={[ VALIDATOR_REQUIRE() ]}
-				onInput={descriptionInputHandler}
+				onInput={inputHandler}
 			/>
 			<Button type='submit' disabled={!formState.isValid}>
 				Add place
