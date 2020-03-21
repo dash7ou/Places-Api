@@ -1,13 +1,13 @@
 import React, { useContext, Fragment } from "react";
 import { NavLink } from "react-router-dom";
 
-
+import Button from "../FormElements/Button";
 import { AuthContext } from "../../context/auth-context"
 
 import "./NavLinks.css";
 
 const NavLinks = ()=>{
-    const {isLoggedIn} = useContext(AuthContext);
+    const {isLoggedIn, logout} = useContext(AuthContext);
     return(
         <ul className="nav-links">
             <li>
@@ -30,6 +30,9 @@ const NavLinks = ()=>{
                     Authenticate
                 </NavLink>
             </li> }
+
+            {isLoggedIn && <li>
+                <button onClick={logout}>Logout</button></li>}
         </ul>
     )
 };
