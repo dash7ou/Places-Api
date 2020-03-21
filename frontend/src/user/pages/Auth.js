@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 
 import Card from "../../shared/components/UIElements/Card";
 import Input from "../../shared/components/FormElements/Input";
@@ -6,13 +6,15 @@ import Button from "../../shared/components/FormElements/Button";
 import { useFrom } from "../../shared/hooks/form-hook";
 import {
     VALIDATOR_EMAIL,
-    VALIDATOR_MINLENGTH
+    VALIDATOR_MINLENGTH,
+    VALIDATOR_REQUIRE
 } from "../../shared/utils/validators";
 
 import "./Auth.css"
 
 const Auth = ()=>{
-    const [ formState , inputHandler ] = useFrom({
+    const [ isLoginMode, setIsLoginMode ] = useState(true);
+    const [ formState , inputHandler, setDateForm ] = useFrom({
         email: {
             value: "",
             isValid: false,
@@ -21,7 +23,25 @@ const Auth = ()=>{
             value: "",
             isValid: false
         }
-    }, false)
+    }, false);
+
+    const onSwitchHandler = ()=>{
+        if(!isLoginMode){
+            setDateForm({
+                ...formState.inputs,
+                name: undefined
+            }, formState.inputs.email.isValid && formState.inputs.password.isValid)
+        }else{
+            setDateForm({
+                ...formState.inputs,
+                name: {
+                    value: "",
+                    isValid: false
+                }
+            }, false)
+        }
+        setIsLoginMode(prevMode => !prevMode)
+    }
 
     const onSubmitForm = (event)=>{
         event.preventDefault();
@@ -32,6 +52,17 @@ const Auth = ()=>{
             <h2>Login Required</h2>
             <hr/>
             <form onSubmit={onSubmitForm}>
+                {
+                    !isLoginMode && <Input 
+                        element="input"
+                        id="name"
+                        type="text"
+                        label="Name"
+                        validators={[VALIDATOR_REQUIRE()]}
+                        errorText="Please enter a valid name"
+                        onInput={inputHandler}
+                    />
+                }
                 <Input 
                     id="email"
                     element="input"
@@ -50,7 +81,8 @@ const Auth = ()=>{
                     errorText="Please enter a valid password at least 5 characters."
                     onInput={inputHandler}
                 />
-                <Button type="submit" disable={!formState.isValid}>Login</Button>
+                <Button type="submit" disabled={!formState.isValid}>{ isLoginMode ? "Login" : "SignUp" }</Button>
+                <Button inverse onClick={onSwitchHandler}>Switch To { isLoginMode ? "Login" : "SignUp" }</Button>
             </form>
         </Card>
     )
