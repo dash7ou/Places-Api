@@ -11,7 +11,6 @@ async function getCoordsForAddress( address ){
         const errors = new HttpError("Could not found location for specified address.", 422)
         throw errors;
     }
-
     const coordinates = data.results[0].geometry.location;
     return coordinates;
 }
