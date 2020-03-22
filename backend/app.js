@@ -5,6 +5,7 @@ const HttpError = require("./models/http-error");
 
 // get our routes
 const placesRoute = require("./routes/place");
+const userRoute = require("./routes/user");
 
 // setup our app
 const app = express();
@@ -12,6 +13,8 @@ app.use(bodyParser.json())
 
 // routes
 app.use("/api/v1/places", placesRoute);
+app.use("/api/v1/users", userRoute);
+
 
 // routes not founds
 app.use((req,res ,next)=>{
