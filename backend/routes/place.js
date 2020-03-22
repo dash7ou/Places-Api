@@ -1,4 +1,5 @@
 const express = require("express");
+const { check } = require("express-validator");
 
 const router = express.Router();
 
@@ -12,8 +13,18 @@ const {
 
 router.get("/:id", getPlaceById);
 router.get("/user/:id", getPlaceByUserId);
-router.post("/", createPlace);
-router.patch("/:id", updatePalace);
+
+router.post("/",[
+    check("title").not().isEmpty(),
+    check("description").isLength({min : 5}),
+    check("address").not().isEmpty()
+] ,createPlace);
+
+router.patch("/:id",[
+    check("title").not().isEmpty(),
+    check("description").isLength({min : 5}),
+], updatePalace);
+
 router.delete("/:id", deletePlace);
 
 module.exports = router;
