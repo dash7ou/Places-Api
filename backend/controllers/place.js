@@ -20,7 +20,6 @@ exports.createPlace = async ( req , res , next) =>{
             creator
         }
     } = req;
-    console.log("this is good place", address)
     let coordinates;
     try{
         coordinates = await getCoordsForAddress(address);
@@ -37,8 +36,13 @@ exports.createPlace = async ( req , res , next) =>{
         creator
     })
 
+    try{
+        await place.save();
+    }catch(err){
+        const error = new HttpError("Error in creating new place please try again.", 500);
+        return next(error);
+    }
     res.status(200).send(place)
-
 }
 exports.updatePalace = (req ,res, next)=>{
     const errors = validationResult(req);
