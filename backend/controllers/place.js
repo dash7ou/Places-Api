@@ -2,6 +2,7 @@ const { validationResult }= require("express-validator");
 
 const HttpError = require("../models/http-error")
 const getCoordsForAddress = require("../utils/location");
+const Place = require("../models/Place");
 
 exports.getPlaceById = (req, res ,next)=>{}
 exports.getPlaceByUserId = (req, res, next)=>{}
@@ -12,7 +13,11 @@ exports.createPlace = async ( req , res , next) =>{
     }
     const { 
         body:{
-            address
+            address,
+            title,
+            description,
+            image,
+            creator
         }
     } = req;
     console.log("this is good place", address)
@@ -23,9 +28,16 @@ exports.createPlace = async ( req , res , next) =>{
         return next(err)
     }
 
-    res.status(200).send({
-        coordinates
+    const place = new Place({
+        title,
+        description,
+        image,
+        address,
+        location: coordinates,
+        creator
     })
+
+    res.status(200).send(place)
 
 }
 exports.updatePalace = (req ,res, next)=>{

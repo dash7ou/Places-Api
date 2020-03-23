@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
 
 const HttpError = require("./models/http-error");
 
@@ -33,6 +34,14 @@ app.use((error, req, res, next)=>{
     })
 })
 
-app.listen(5000, ()=>{
-    console.log("server run successful.. port 5000")
+// conection database and run server
+mongoose.connect('mongodb://localhost:27017/myapp', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(()=>{
+    app.listen(5000, ()=>{
+        console.log("server run successful.. port 5000")
+    })
+}).catch(err =>{
+    console.log(err)
 })
