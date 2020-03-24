@@ -101,4 +101,30 @@ exports.updatePalace = async (req ,res, next)=>{
     }
     res.status(200).send(place)
 }
-exports.deletePlace = (req, res, next)=>{}
+exports.deletePlace = async (req, res, next)=>{
+    const {
+        params: {
+            id: placeId
+        }
+    } = req;
+
+    let place;
+    try{
+        place = await Place.findOne({ _id: placeId});
+    }catch(err){
+        const error = new HttpError("Error in delete place please try again.", 500);
+        return next(error);
+    }
+
+    if(!place) next(new HttpError("There is no place with this id", 404));
+    try{
+        await place.remove()
+    }catch(err){
+        const error = new HttpError("Error in delete place please try again.", 500);
+        return next(error);
+    }
+
+    res.status(200).send({
+        message: "Deleted post done."
+    })
+}
