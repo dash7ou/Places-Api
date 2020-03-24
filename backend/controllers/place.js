@@ -4,7 +4,23 @@ const HttpError = require("../models/http-error")
 const getCoordsForAddress = require("../utils/location");
 const Place = require("../models/Place");
 
-exports.getPlaceById = (req, res ,next)=>{}
+exports.getPlaceById = async (req, res ,next)=>{
+    const {
+        params:{
+            id: placeId
+        }
+    } = req;
+
+
+    let place;
+    try{
+        place = await Place.findById(placeId);
+    }catch(err){
+        next(new HttpError("There are error in getting photo", 500))
+    }
+    if(!place) next(new HttpError("There is no place with this id", 404));
+    res.status(200).send(place);
+}
 exports.getPlaceByUserId = (req, res, next)=>{}
 exports.createPlace = async ( req , res , next) =>{
     const errors = validationResult(req);
