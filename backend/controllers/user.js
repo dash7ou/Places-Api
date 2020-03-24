@@ -1,17 +1,50 @@
 const HttpError = require("../models/http-error");
-const { validationResult }= require("express-validator")
+const { validationResult }= require("express-validator");
+
+const User = require("../models/User");
 
 
 exports.getUsers = (req, res, next)=>{}
-exports.signup = (req , res, next)=>{
+exports.signup = async (req , res, next)=>{
     const errors = validationResult(req);
     if(!errors.isEmpty()){
-        throw new HttpError("Invalid inputs passedm please check your data", 422)
+        return next( new HttpError("Invalid inputs passed please check your data", 422))
     }
+
+    const {
+        body:{
+            name,
+            email,
+            password,
+            places
+        }
+    } = req;
+
+    let userExist;
+    try {
+        userExist = await User.findOne({email})
+    } catch (error) {
+        return next(new HttpError("There are problem in signup try again", 500))
+    }
+
+    if(userExist){
+        const error = new HttpError("This user already exist", 422);
+        return next(error);
+    }
+    let user;
+    try{
+        user = new User({name, email, password , image:"djakhak", places});
+        await user.save();
+    }catch(err){
+        console.log(err)
+        return next(new HttpError("There are problem in signup try again", 500))
+    }
+
+    res.status(201).send(user)
 }
 exports.login = (req , res , next)=>{
     const errors = validationResult(req);
     if(!errors.isEmpty()){
-        throw new HttpError("Invalid inputs passedm please check your data", 422)
+        return next( new HttpError("Invalid inputs passedm please check your data", 422))
     }
 }

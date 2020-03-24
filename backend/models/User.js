@@ -19,13 +19,12 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    places:[
-        {
-            type: String
-        }
-    ]
+    places:{
+        type: String
+    }
+},{
+    timestamps: true
 });
 
-userSchema.plugin(uniqueValidator);
 
 module.exports = mongoose.model("User", userSchema);
