@@ -37,6 +37,7 @@ app.use((error, req, res, next)=>{
 // conection database and run server
 mongoose.connect('mongodb://localhost:27017/places-api', {
     useNewUrlParser: true,
+    useCreateIndex:true,
     useUnifiedTopology: true
 }).then(()=>{
     console.log("connect to database port 27017")

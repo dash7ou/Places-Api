@@ -16,9 +16,9 @@ exports.getPlaceById = async (req, res ,next)=>{
     try{
         place = await Place.findById(placeId);
     }catch(err){
-        next(new HttpError("There are error in getting photo", 500))
+        return next(new HttpError("There are error in getting photo", 500))
     }
-    if(!place) next(new HttpError("There is no place with this id", 404));
+    if(!place) return next(new HttpError("There is no place with this id", 404));
     res.status(200).send(place);
 }
 exports.getPlaceByUserId = (req, res, next)=>{}
@@ -87,7 +87,7 @@ exports.updatePalace = async (req ,res, next)=>{
     }
 
 
-    if(!place) next(new HttpError("There is no place with this id", 404));
+    if(!place) return next(new HttpError("There is no place with this id", 404));
 
     place.title= title;
     place.description = description;
@@ -116,7 +116,7 @@ exports.deletePlace = async (req, res, next)=>{
         return next(error);
     }
 
-    if(!place) next(new HttpError("There is no place with this id", 404));
+    if(!place) return next(new HttpError("There is no place with this id", 404));
     try{
         await place.remove()
     }catch(err){

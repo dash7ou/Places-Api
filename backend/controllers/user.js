@@ -42,9 +42,32 @@ exports.signup = async (req , res, next)=>{
 
     res.status(201).send(user)
 }
-exports.login = (req , res , next)=>{
+exports.login = async (req , res , next)=>{
     const errors = validationResult(req);
     if(!errors.isEmpty()){
         return next( new HttpError("Invalid inputs passedm please check your data", 422))
     }
+
+    const {
+        body:{
+            email,
+            password
+        }
+    } = req;
+
+    let user;
+    try {
+        user = await User.findOne({
+            email,
+            password
+        });
+    } catch (error) {
+        return next(new HttpError("There are problem in login try again", 500))
+    }
+
+    if(!user) return next(new HttpError("Invalid email or password", 401));
+
+    res.status(200).send({
+        message: "Login success."
+    })
 }
