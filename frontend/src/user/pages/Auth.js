@@ -1,10 +1,12 @@
-import React, {useState, useContext} from "react";
+import React, {useState, useContext, Fragment} from "react";
 
 import Card from "../../shared/components/UIElements/Card";
 import Input from "../../shared/components/FormElements/Input";
 import Button from "../../shared/components/FormElements/Button";
 import { useFrom } from "../../shared/hooks/form-hook";
 import { AuthContext } from "../../shared/context/auth-context";
+import ErrorModal from "../../shared/components/UIElements/ErrorModal";
+import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import {
     VALIDATOR_EMAIL,
     VALIDATOR_MINLENGTH,
@@ -30,7 +32,8 @@ const Auth = ()=>{
         }
     }, false);
 
-    const onSwitchHandler = ()=>{
+    const onSwitchHandler = (event)=>{
+        event.preventDefault();
         if(!isLoginMode){
             setDateForm({
                 ...formState.inputs,
@@ -50,11 +53,30 @@ const Auth = ()=>{
 
     const onSubmitForm = async (event)=>{
         event.preventDefault();
+        setIsLoading(true);
         if(isLoginMode){
-
+            try{
+                const response = await fetch("http://localhost:5000/api/v1/users/login", {
+                    method: "POST",
+                    headers:{
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        email: formState.inputs.email.value,
+                        password: formState.inputs.password.value
+                    })
+                })
+                const data = await response.json();
+                if(!response.ok) throw new Error(data.message);
+                setIsLoading(false)
+                console.log(data)
+                // login()
+            }catch(err){
+                setError(err.message || 'Something went wrong, please try again.');
+                setIsLoading(false)
+            }
         }else{
             try{
-                setIsLoading(true);
                 const response = await fetch("http://localhost:5000/api/v1/users/signup", {
                     method: "POST",
                     headers:{
@@ -67,20 +89,29 @@ const Auth = ()=>{
                     })
                 })
                 const data = await response.json();
+                if(!response.ok) throw new Error(data.message);
                 setIsLoading(false)
-                login()
+                console.log(data)
+                // login()
             }catch(err){
+                console.log(err)
                 setError(err.message || 'Something went wrong, please try again.');
                 setIsLoading(false)
             }
 
         }
     }
+    const errorHandle = ()=>{
+        setError(false)
+    }
     return (
+        <Fragment>
+        <ErrorModal error={error} onClear={errorHandle}/>
         <Card className="authentication">
+            {isLoading && <LoadingSpinner asOverlay/>}
             <h2>Login Required</h2>
             <hr/>
-            <form onSubmit={onSubmitForm}>
+            <form onSubmit={(event)=>onSubmitForm(event)}>
                 {
                     !isLoginMode && <Input 
                         element="input"
@@ -111,9 +142,10 @@ const Auth = ()=>{
                     onInput={inputHandler}
                 />
                 <Button type="submit" disabled={!formState.isValid}>{ isLoginMode ? "Login" : "SignUp" }</Button>
-                <Button inverse onClick={onSwitchHandler}>Switch To { isLoginMode ? "Login" : "SignUp" }</Button>
+                <Button inverse onClick={onSwitchHandler}>Switch To { isLoginMode ? "SignUp" : "Login" }</Button>
             </form>
         </Card>
+        </Fragment>
     )
 }
 
