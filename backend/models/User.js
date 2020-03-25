@@ -19,9 +19,13 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    places:{
-        type: String
-    }
+    places:[
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            ref: "Place"
+        }
+    ]
 },{
     timestamps: true
 });

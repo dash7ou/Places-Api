@@ -35,7 +35,7 @@ app.use((error, req, res, next)=>{
 })
 
 // conection database and run server
-mongoose.connect('mongodb://localhost:27017/places-api', {
+mongoose.connect("mongodb+srv://dashzou:mohammed12345***@place-api-z8gjz.mongodb.net/place-api?retryWrites=false&w=majority", {
     useNewUrlParser: true,
     useCreateIndex:true,
     useUnifiedTopology: true

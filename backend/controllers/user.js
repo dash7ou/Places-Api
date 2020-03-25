@@ -27,7 +27,6 @@ exports.signup = async (req , res, next)=>{
             name,
             email,
             password,
-            places
         }
     } = req;
 
@@ -44,7 +43,7 @@ exports.signup = async (req , res, next)=>{
     }
     let user;
     try{
-        user = new User({name, email, password , image:"djakhak", places});
+        user = new User({name, email, password , image:"djakhak", places:[]});
         await user.save();
     }catch(err){
         console.log(err)
