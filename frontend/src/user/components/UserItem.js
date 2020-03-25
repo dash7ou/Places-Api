@@ -12,7 +12,7 @@ const UserItem = ({userItem})=>{
         _id,
         image,
         name,
-        placeCount
+        places
     } = userItem;
     return(
         <li className="user-item">
@@ -23,7 +23,7 @@ const UserItem = ({userItem})=>{
                     </div>
                     <div className="user-item__info">
                         <h2>{name}</h2>
-                        <h3> {placeCount} {placeCount > 1 ? "places" : "place"}</h3>
+                        <h3> {places.length} {places.length > 1 ? "places" : "place"}</h3>
                     </div>
                 </Link>
             </Card>
