@@ -18,12 +18,31 @@ exports.getPlaceById = async (req, res ,next)=>{
     try{
         place = await Place.findById(placeId);
     }catch(err){
-        return next(new HttpError("There are error in getting photo", 500))
+        return next(new HttpError("There are error in getting place", 500))
     }
     if(!place) return next(new HttpError("There is no place with this id", 404));
     res.status(200).send(place);
 }
-exports.getPlaceByUserId = (req, res, next)=>{}
+exports.getPlaceByUserId = async (req, res, next)=>{
+    const {
+        params:{
+            id: userId
+        }
+    } = req;
+
+    let places;
+    try {
+        places = await Place.find({ creator : userId})
+    } catch (error) {
+        return next(new HttpError("There are error in getting places", 500))
+    }
+    
+    if(!places || places.length === 0 ){
+        return next(new HttpError("No Places", 404));
+    }
+
+    res.status(200).send(places);
+}
 exports.createPlace = async ( req , res , next) =>{
     const errors = validationResult(req);
     if(!errors.isEmpty()){
