@@ -4,7 +4,18 @@ const { validationResult }= require("express-validator");
 const User = require("../models/User");
 
 
-exports.getUsers = (req, res, next)=>{}
+exports.getUsers =async (req, res, next)=>{
+    let users;
+    try {
+        users = await User.find();
+    } catch (error) {
+        return next(new HttpError("There are problem in get users try again", 500))
+    }
+
+    if(!users || users.length === 0) return next(new HttpError("There is no users until now.", 404));
+
+    res.status(200).send(users);
+}
 exports.signup = async (req , res, next)=>{
     const errors = validationResult(req);
     if(!errors.isEmpty()){
