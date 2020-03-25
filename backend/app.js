@@ -12,6 +12,14 @@ const userRoute = require("./routes/user");
 const app = express();
 app.use(bodyParser.json())
 
+// cross
+app.use((req, res, next)=>{
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Headers", 'Origin, X-Request-With, Content-Type, Accept, Authorization' );
+    res.setHeader("Access-control-Allow-Methods", "GET, POST, PATCH, DELETE");
+    next()
+});
+
 // routes
 app.use("/api/v1/places", placesRoute);
 app.use("/api/v1/users", userRoute);
