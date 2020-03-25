@@ -16,6 +16,9 @@ import "./Auth.css"
 const Auth = ()=>{
     const { login } = useContext(AuthContext);
     const [ isLoginMode, setIsLoginMode ] = useState(true);
+    const [ isLoading, setIsLoading ] = useState(false);
+    const [ error , setError ] = useState(null);
+
     const [ formState , inputHandler, setDateForm ] = useFrom({
         email: {
             value: "",
@@ -51,6 +54,7 @@ const Auth = ()=>{
 
         }else{
             try{
+                setIsLoading(true);
                 const response = await fetch("http://localhost:5000/api/v1/users/signup", {
                     method: "POST",
                     headers:{
@@ -62,11 +66,14 @@ const Auth = ()=>{
                         password: formState.inputs.password.value
                     })
                 })
-                const data = await response.json()
-                console.log(data)
+                const data = await response.json();
+                setIsLoading(false)
+                login()
             }catch(err){
-                console.log(err);
+                setError(err.message || 'Something went wrong, please try again.');
+                setIsLoading(false)
             }
+
         }
     }
     return (
