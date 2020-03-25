@@ -125,7 +125,7 @@ exports.deletePlace = async (req, res, next)=>{
 
     let place;
     try{
-        place = await Place.findOne({ _id: placeId});
+        place = await Place.findOne({ _id: placeId}).populate("creator");
     }catch(err){
         const error = new HttpError("Error in delete place please try again.", 500);
         return next(error);
@@ -133,7 +133,12 @@ exports.deletePlace = async (req, res, next)=>{
 
     if(!place) return next(new HttpError("There is no place with this id", 404));
     try{
-        await place.remove()
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        await place.remove({session});
+        place.creator.places.pull(place);
+        await place.creator.save({session});
+        await session.commitTransaction();
     }catch(err){
         const error = new HttpError("Error in delete place please try again.", 500);
         return next(error);
