@@ -5,6 +5,7 @@ import Input from "../../shared/components/FormElements/Input";
 import Button from "../../shared/components/FormElements/Button";
 import { useFrom } from "../../shared/hooks/form-hook";
 import { AuthContext } from "../../shared/context/auth-context";
+import { useHttpClient } from "../../shared/hooks/http-hook"
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import {
@@ -20,6 +21,8 @@ const Auth = ()=>{
     const [ isLoginMode, setIsLoginMode ] = useState(true);
     const [ isLoading, setIsLoading ] = useState(false);
     const [ error , setError ] = useState(null);
+
+    const [ isLoading , error, sendRequest, clearError ] = useHttpClient()
 
     const [ formState , inputHandler, setDateForm ] = useFrom({
         email: {
