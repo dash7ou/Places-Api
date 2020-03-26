@@ -21,10 +21,12 @@ export const useHttpClient = ()=>{
                 });
         
                 const data = await response.json();
+                activeHttpRequests.current = activeHttpRequests.current.filter(reqctl => reqctl !== httpAbortCtrl);
                 if(!response.ok){
                     throw new Error(data.message);
                 }
                 setIsLoading(false);
+                console.log(data)
                 return data
             } catch (error) {
                 setError(error.message);
