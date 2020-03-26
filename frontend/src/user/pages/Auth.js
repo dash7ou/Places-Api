@@ -55,26 +55,26 @@ const Auth = ()=>{
         event.preventDefault();
         if(isLoginMode){
             try{
-                await sendRequest("http://localhost:5000/api/v1/users/login", "POST",JSON.stringify({
+                const data = await sendRequest("http://localhost:5000/api/v1/users/login", "POST",JSON.stringify({
                     email: formState.inputs.email.value,
                     password: formState.inputs.password.value
                 }),
                 {
                     "Content-Type": "application/json"
                 })
+                login(data._id.toString())
             }catch(err){}
-            // login()
         }else{
             try{
-                await sendRequest("http://localhost:5000/api/v1/users/signup", "POST",JSON.stringify({
+                const data = await sendRequest("http://localhost:5000/api/v1/users/signup", "POST",JSON.stringify({
                     name: formState.inputs.name.value,
                     email: formState.inputs.email.value,
                     password: formState.inputs.password.value
                 }),{
                     "Content-Type": "application/json"
                 })
+                login(data._id.toString())
             }catch(err){}
-            // login()
         }
     }
 

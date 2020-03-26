@@ -13,12 +13,15 @@ import './App.css';
 
 const App = ()=> {
   const [isLoggedIn, setISLoggedIn ] = useState(false);
+  const [userId, setUserId] = useState(null);
 
-  const login = useCallback(()=>{
+  const login = useCallback((uid)=>{
     setISLoggedIn(true);
+    setUserId(uid);
   }, [])
   const logout = useCallback(()=>{
     setISLoggedIn(false);
+    setUserId(null)
   }, [])
 
   let routes;
@@ -43,6 +46,7 @@ const App = ()=> {
       value={
         {
           isLoggedIn: isLoggedIn,
+          userId,
           login,
           logout
         }

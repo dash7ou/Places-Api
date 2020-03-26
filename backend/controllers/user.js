@@ -77,7 +77,5 @@ exports.login = async (req , res , next)=>{
 
     if(!user) return next(new HttpError("Invalid email or password", 401));
 
-    res.status(200).send({
-        message: "Login success."
-    })
+    res.status(200).send(user);
 }

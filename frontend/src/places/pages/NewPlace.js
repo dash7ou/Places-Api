@@ -1,13 +1,20 @@
-import React from 'react';
+import React, { useContext, Fragment } from 'react';
+import { useHistory } from "react-router-dom";
 
 import Input from '../../shared/components/FormElements/Input';
 import Button from '../../shared/components/FormElements/Button';
+import ErrorModal from "../../shared/components/UIElements/ErrorModal";
+import Spinner from "../../shared/components/UIElements/LoadingSpinner";
 import { VALIDATOR_REQUIRE, VALIDATOR_MINLENGTH } from '../../shared/utils/validators';
 import { useFrom } from "../../shared/hooks/form-hook";
+import { useHttpClient } from "../../shared/hooks/http-hook";
+import {AuthContext} from "../../shared/context/auth-context";
 
 import './PlaceForm.css';
 
 const NewPlace = () => {
+	const [isLoading,  error , sendRequest, clearError ] = useHttpClient();
+	const { userId } = useContext(AuthContext)
 	const [formState , inputHandler] = useFrom(
 		{
 			title: {
@@ -26,11 +33,30 @@ const NewPlace = () => {
 	);
 
 
-	const placeSubmitHandler = (event) => {
+	const history = useHistory();
+	const placeSubmitHandler = async (event) => {
 		event.preventDefault();
-		console.log(formState.inputs);
+		try{
+			await sendRequest("http://localhost:5000/api/v1/places", 'POST', JSON.stringify({
+				title: formState.inputs.title.value,
+				description: formState.inputs.description.value,
+				address: formState.inputs.address.value,
+				image: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/NYC_Empire_State_Building.jpg/640px-NYC_Empire_State_Building.jpg",
+				creator: userId
+			}), {
+				'Content-Type':"application/json"
+			})
+
+			//redirect user to different page
+			history.push('/')
+
+		}catch(err){}
+
 	};
 	return (
+		<Fragment>
+		<ErrorModal error={error} onClear={clearError} />
+		{isLoading && <Spinner asOverlay />}
 		<form className='place-form' onSubmit={placeSubmitHandler}>
 			<Input
 				id='title'
@@ -61,6 +87,7 @@ const NewPlace = () => {
 				Add place
 			</Button>
 		</form>
+		</Fragment>
 	);
 };
 
