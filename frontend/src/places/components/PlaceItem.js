@@ -8,7 +8,7 @@ import { AuthContext } from "../../shared/context/auth-context"
 
 import "./PlaceItem.css"
 
-const PlaceItem = ({ place: {_id, imageUrl, title, description, address, creator, location }})=>{
+const PlaceItem = ({ place: {_id, image, title, description, address, creator, location }})=>{
     const { isLoggedIn } = useContext(AuthContext)
     const [showMap, changeStateShow] = useState(false);
     const [showConfirm , changeConfirmState ] = useState(false);
@@ -58,7 +58,7 @@ const PlaceItem = ({ place: {_id, imageUrl, title, description, address, creator
             <li className="place-item">
                 <Card className="place-item__content">
                     <div className="place-item__image">
-                        <img src={imageUrl} alt={title} />
+                        <img src={image} alt={title} />
                     </div>
                     <div className="place-item__info">
                         <h2>{title}</h2>

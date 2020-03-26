@@ -1,40 +1,35 @@
-import React from "react";
+import React, { useEffect, useState, Fragment } from "react";
 import { useParams } from "react-router-dom";
+
 import PlaceList from "../components/PlacesList";
-
-
-
-const items = [
-    {
-      _id: '1',
-      title: 'Empire State Building',
-      description: 'One of the most famous sky scrapers in the world!',
-      imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/NYC_Empire_State_Building.jpg/640px-NYC_Empire_State_Building.jpg',
-      address: '20 W 34th St, New York, NY 10001',
-      location: {
-        lat: 40.7484405,
-        lng: -73.9878584
-      },
-      creator: '1'
-    },
-    {
-      _id: 'p2',
-      title: 'Empire State Building',
-      description: 'One of the most famous sky scrapers in the world!',
-      imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/NYC_Empire_State_Building.jpg/640px-NYC_Empire_State_Building.jpg',
-      address: '20 W 34th St, New York, NY 10001',
-      location: {
-        lat: 40.7484405,
-        lng: -73.9878584
-      },
-      creator: '2'
-    }
-];
+import Spinner from "../../shared/components/UIElements/LoadingSpinner";
+import ErrorModal from "../../shared/components/UIElements/ErrorModal"
+import { useHttpClient } from "../../shared/hooks/http-hook";
 
 const UserPlaces = ()=>{
   const userId = useParams().userId;
-  const loadPlaces = items.filter(item => item.creator === userId)
-  return <PlaceList items={loadPlaces}/>
+  const [ isLoading , error, sendRequest , clearError] = useHttpClient();
+  const [places , setPlaces] = useState(null);
+  console.log(userId)
+
+  useEffect(()=>{
+    const getPlaces = async ()=>{
+      try{
+        const data = await sendRequest(`http://localhost:5000/api/v1/places/user/${userId}`);
+        setPlaces(data)
+      }catch(err){}
+    }
+
+    getPlaces();
+  },[])
+
+  return (
+    <Fragment>
+      <ErrorModal error={error} onClear={clearError} />
+      {isLoading && <Spinner />}
+      {places && <PlaceList items={places}/>}
+    </Fragment>
+  )
 }
 
 
