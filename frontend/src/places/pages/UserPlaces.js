@@ -26,7 +26,7 @@ const UserPlaces = ()=>{
   return (
     <Fragment>
       <ErrorModal error={error} onClear={clearError} />
-      {isLoading && <Spinner />}
+      {isLoading && <Spinner asOverlay/>}
       {places && <PlaceList items={places}/>}
     </Fragment>
   )

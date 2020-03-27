@@ -22,7 +22,7 @@ const User = ()=>{
         <Fragment>
             <ErrorModal error={error} onClear={clearError} />
             {isLoading && <div className="center">
-                <Spinner />
+                <Spinner asOverlay/>
             </div>}
             { !isLoading && loadingUsers && <UserList items={loadingUsers}/> }
 

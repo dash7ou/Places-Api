@@ -1,45 +1,22 @@
-import React,{ useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React,{ useEffect, Fragment, useContext } from 'react';
+import { useParams, useHistory } from 'react-router-dom';
 
 import Button from '../../shared/components/FormElements/Button';
 import Input from '../../shared/components/FormElements/Input';
 import { VALIDATOR_REQUIRE, VALIDATOR_MINLENGTH } from '../../shared/utils/validators';
 import { useFrom } from "../../shared/hooks/form-hook";
-import Card from "../../shared/components/UIElements/Card"
+import Card from "../../shared/components/UIElements/Card";
+import { useHttpClient } from "../../shared/hooks/http-hook";
+import ErrorModal from "../../shared/components/UIElements/ErrorModal.js";
+import Spinner from "../../shared/components/UIElements/LoadingSpinner";
+import { AuthContext } from "../../shared/context/auth-context"
 
 import "./PlaceForm.css"
 
-const items = [
-	{
-		_id: '1',
-		title: 'Empire State Building',
-		description: 'One of the most famous sky scrapers in the world!',
-		imageUrl:
-			'https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/NYC_Empire_State_Building.jpg/640px-NYC_Empire_State_Building.jpg',
-		address: '20 W 34th St, New York, NY 10001',
-		location: {
-			lat: 40.7484405,
-			lng: -73.9878584
-		},
-		creator: '1'
-	},
-	{
-		_id: 'p2',
-		title: 'Empire State Building',
-		description: 'One of the most famous sky scrapers in the world!',
-		imageUrl:
-			'https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/NYC_Empire_State_Building.jpg/640px-NYC_Empire_State_Building.jpg',
-		address: '20 W 34th St, New York, NY 10001',
-		location: {
-			lat: 40.7484405,
-			lng: -73.9878584
-		},
-		creator: '2'
-	}
-];
-
 const UpdatePlace = () => {
 	const placeId = useParams().placeId;
+	const [ isLoading , error , sendRequest , clearError ] = useHttpClient();
+	const { userId } = useContext(AuthContext);
 
 	const [ fromState, inputHandler, setFromData ] = useFrom({
 		title:{
@@ -52,38 +29,52 @@ const UpdatePlace = () => {
 		}
 	}, false);
 
+	const history = useHistory()
 
-	let data = items.find((place) => place._id === placeId);
 
 	useEffect(()=>{
-		if(!data){
-			data = null;
-			return
-		}
-		const {title , description } = data;
-
-		if(title && description){
-			setFromData({
-				title:{
-					value: title,
-					isValid: true
-				},
-				description:{
-					value: description,
-					isValid: true
+		const getData = async ()=>{
+			try{
+				const data = await sendRequest(`http://localhost:5000/api/v1/places/${placeId}`);
+				const {title , description } = data;
+				if(title && description){
+					setFromData({
+						title:{
+							value: title,
+							isValid: true
+						},
+						description:{
+							value: description,
+							isValid: true
+						}
+					}, true)
 				}
-			}, true)
+			}catch(err){}
 		}
-	}, [setFromData, data])
+		getData();
+
+	}, [placeId, setFromData,sendRequest])
 
 
-	const placeUpdateSubmitHandler = event =>{
+	const placeUpdateSubmitHandler = async event =>{
 		event.preventDefault();
-		console.log(fromState.inputs)
+		try{
+			await sendRequest(`http://localhost:5000/api/v1/places/${placeId}`, 'PATCH', JSON.stringify({
+				title: fromState.inputs.title.value,
+				description:fromState.inputs.description.value
+			}),{
+				"Content-Type":"application/json"
+			})
+			history.push(`/${userId}/places`)
+		}catch(err){}
 	}
 
 	return (
-		data && fromState.inputs.description.value ? (
+		<Fragment>
+		{isLoading && <Spinner asOverlay/>}
+		<ErrorModal error={error} onClear={clearError} />
+		{!isLoading && fromState.inputs.description.value ? (
+			<Fragment>
 			<form className='place-form' onSubmit={placeUpdateSubmitHandler}>
 			<Input
 				id='title'
@@ -110,14 +101,16 @@ const UpdatePlace = () => {
 				Update place
 			</Button>
 		</form>
+		</Fragment>
 		):(
 			<div className="center">
 				<Card>
 					<h2>Could not find place!</h2>
 				</Card>
 			</div>
-		)
-	);
+		)}
+		</Fragment>
+	)
 };
 
 export default UpdatePlace;
