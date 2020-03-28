@@ -13,7 +13,7 @@ import Spinner from "../../shared/components/UIElements/LoadingSpinner";
 import "./PlaceItem.css"
 
 const PlaceItem = ({ place: {_id, image, title, description, address, creator, location }, onDeletePlaceHandler})=>{
-    const { isLoggedIn } = useContext(AuthContext)
+    const { isLoggedIn , userId} = useContext(AuthContext)
     const [showMap, changeStateShow] = useState(false);
     const [showConfirm , changeConfirmState ] = useState(false);
     const [ isLoading , error , sendRequest, clearError ] = useHttpClient();
@@ -83,7 +83,7 @@ const PlaceItem = ({ place: {_id, image, title, description, address, creator, l
                     </div>
                     <div className="place-item__actions">
                         <Button inverse onClick={onChangeStateShow}>View On Map</Button>
-                        {isLoggedIn && <Fragment><Button to={`/places/${_id}`}>EDIT</Button>
+                        {isLoggedIn && (userId === creator) && <Fragment><Button to={`/places/${_id}`}>EDIT</Button>
                         <Button danger onClick={onCahngeStateShowConfirm}>DELETE</Button></Fragment>}
                     </div>
                 </Card>
