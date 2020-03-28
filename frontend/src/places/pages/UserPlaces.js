@@ -10,7 +10,6 @@ const UserPlaces = ()=>{
   const userId = useParams().userId;
   const [ isLoading , error, sendRequest , clearError] = useHttpClient();
   const [places , setPlaces] = useState(null);
-  console.log(userId)
 
   useEffect(()=>{
     const getPlaces = async ()=>{
@@ -23,11 +22,16 @@ const UserPlaces = ()=>{
     getPlaces();
   },[])
 
+  const onDeletePlaceHandler = (id)=>{
+    const placesAfterDelete = places.filter( place => place._id.toString() === id.toString());
+    setPlaces(placesAfterDelete)
+  }
+
   return (
     <Fragment>
       <ErrorModal error={error} onClear={clearError} />
       {isLoading && <Spinner asOverlay/>}
-      {places && <PlaceList items={places}/>}
+      {places && <PlaceList items={places} onDeletePlaceHandler={onDeletePlaceHandler}/>}
     </Fragment>
   )
 }

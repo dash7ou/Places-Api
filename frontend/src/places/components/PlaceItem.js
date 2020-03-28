@@ -1,30 +1,45 @@
 import React, { useState, Fragment, useContext } from "react";
+import { useHistory } from "react-router-dom";
 
 import Card from "../../shared/components/UIElements/Card";
 import Button from "../../shared/components/FormElements/Button";
 import Modal from "../../shared/components/UIElements/Modal";
 import Map from "../../shared/components/UIElements/Map";
-import { AuthContext } from "../../shared/context/auth-context"
+import { AuthContext } from "../../shared/context/auth-context";
+import  { useHttpClient } from "../../shared/hooks/http-hook";
+import ErrorModal from "../../shared/components/UIElements/ErrorModal";
+import Spinner from "../../shared/components/UIElements/LoadingSpinner";
 
 import "./PlaceItem.css"
 
-const PlaceItem = ({ place: {_id, image, title, description, address, creator, location }})=>{
+const PlaceItem = ({ place: {_id, image, title, description, address, creator, location }, onDeletePlaceHandler})=>{
     const { isLoggedIn } = useContext(AuthContext)
     const [showMap, changeStateShow] = useState(false);
     const [showConfirm , changeConfirmState ] = useState(false);
+    const [ isLoading , error , sendRequest, clearError ] = useHttpClient();
+
+    const history = useHistory()
 
     const onChangeStateShow = ()=>{
         changeStateShow(!showMap)
     }
+
     const onCahngeStateShowConfirm = ()=>{
         changeConfirmState(!showConfirm)
     }
-    const confirmDeleteHandler = ()=>{
-        console.log("delete")
+
+    const confirmDeleteHandler = async ()=>{
         onCahngeStateShowConfirm()
+        try{
+            await sendRequest(`http://localhost:5000/api/v1/places/${_id.toString()}`, 'DELETE');
+        }catch(err){}
+        onDeletePlaceHandler(_id)
+
     }
+
     return (
         <Fragment>
+            <ErrorModal error={error} onClear={clearError} />
             <Modal 
                 show={showMap} 
                 onCancel={onChangeStateShow}
@@ -57,6 +72,7 @@ const PlaceItem = ({ place: {_id, image, title, description, address, creator, l
             </Modal>
             <li className="place-item">
                 <Card className="place-item__content">
+                    {isLoading && <Spinner  asOverlay />}
                     <div className="place-item__image">
                         <img src={image} alt={title} />
                     </div>

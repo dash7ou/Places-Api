@@ -7,13 +7,13 @@ import Button from "../../shared/components/FormElements/Button";
 
 import "./PlacesList.css";
 
-const PlacesList = ({ items })=>{
+const PlacesList = ({ items, onDeletePlaceHandler })=>{
     return(
         items.length > 0 ? (
             <ul className="place-list">
                 {
                     items.map(
-                        place => <PlaceItem key={place._id} place={place}/>
+                        place => <PlaceItem key={place._id} place={place} onDeletePlaceHandler={onDeletePlaceHandler}/>
                     )
                 }
             </ul>
