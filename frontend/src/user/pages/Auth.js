@@ -8,6 +8,8 @@ import { AuthContext } from "../../shared/context/auth-context";
 import { useHttpClient } from "../../shared/hooks/http-hook"
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
+import ImageUpload from "../../shared/components/FormElements/ImageUpload";
+
 import {
     VALIDATOR_EMAIL,
     VALIDATOR_MINLENGTH,
@@ -87,7 +89,8 @@ const Auth = ()=>{
             <hr/>
             <form onSubmit={(event)=>onSubmitForm(event)}>
                 {
-                    !isLoginMode && <Input 
+                    !isLoginMode &&<Fragment> 
+                    <Input 
                         element="input"
                         id="name"
                         type="text"
@@ -96,6 +99,8 @@ const Auth = ()=>{
                         errorText="Please enter a valid name"
                         onInput={inputHandler}
                     />
+                    <ImageUpload id="image" center/>
+                    </Fragment>
                 }
                 <Input 
                     id="email"
