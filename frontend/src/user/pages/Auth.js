@@ -34,18 +34,24 @@ const Auth = ()=>{
         }
     }, false);
 
+
     const onSwitchHandler = (event)=>{
         event.preventDefault();
         if(!isLoginMode){
             setDateForm({
                 ...formState.inputs,
-                name: undefined
+                name: undefined,
+                image: undefined,
             }, formState.inputs.email.isValid && formState.inputs.password.isValid)
         }else{
             setDateForm({
                 ...formState.inputs,
                 name: {
                     value: "",
+                    isValid: false
+                },
+                image: {
+                    value: null,
                     isValid: false
                 }
             }, false)
@@ -99,7 +105,7 @@ const Auth = ()=>{
                         errorText="Please enter a valid name"
                         onInput={inputHandler}
                     />
-                    <ImageUpload id="image" center/>
+                    <ImageUpload id="image" center onInput={inputHandler}/>
                     </Fragment>
                 }
                 <Input 
