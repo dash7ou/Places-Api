@@ -1,4 +1,5 @@
 const fs = require("fs");
+const path = require("path");
 
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -13,6 +14,9 @@ const userRoute = require("./routes/user");
 // setup our app
 const app = express();
 app.use(bodyParser.json())
+
+// static
+app.use("/uploads/images", express.static(path.join("uploads", "images")));
 
 // cross
 app.use((req, res, next)=>{

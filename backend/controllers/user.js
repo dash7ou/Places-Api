@@ -44,7 +44,7 @@ exports.signup = async (req , res, next)=>{
     }
     let user;
     try{
-        user = new User({name, email, password , image:"djakhak", places:[]});
+        user = new User({name, email, password , image:req.file.path, places:[]});
         await user.save();
     }catch(err){
         return next(new HttpError("There are problem in signup try again", 500))
