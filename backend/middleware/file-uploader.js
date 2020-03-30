@@ -17,7 +17,12 @@ const fileUploader = multer({
             const ext = MIN_TYPE_MAP(file.mimetype);
             cb(null, uuid() + "." + ext);
         }
-    })
+    }),
+    fileFilter: (req, file, cb)=>{
+        const isValid = !!MIN_TYPE_MAP[file.mimetype];
+        const error = isValid ? null : new Error("Invalid mime type!!");
+        cb(error, isValid)
+    }
 });
 
 
