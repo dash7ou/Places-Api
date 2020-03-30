@@ -63,8 +63,6 @@ const PlaceItem = ({ place: {_id, image, title, description, address, creator, l
                         <Button danger onClick={confirmDeleteHandler}> Delete </Button>
                     </Fragment>
                 }
-
-
             >
                 <p>
                     Do you want to proceed and delete this place? Please note that it can't be undone.
@@ -74,7 +72,7 @@ const PlaceItem = ({ place: {_id, image, title, description, address, creator, l
                 <Card className="place-item__content">
                     {isLoading && <Spinner  asOverlay />}
                     <div className="place-item__image">
-                        <img src={image} alt={title} />
+                        <img src={`http://localhost:5000/${image}`} alt={title} />
                     </div>
                     <div className="place-item__info">
                         <h2>{title}</h2>

@@ -53,7 +53,6 @@ exports.createPlace = async ( req , res , next) =>{
             address,
             title,
             description,
-            image,
             creator
         }
     } = req;
@@ -74,7 +73,7 @@ exports.createPlace = async ( req , res , next) =>{
     const place = new Place({
         title,
         description,
-        image,
+        image: req.file.path,
         address,
         location: coordinates,
         creator

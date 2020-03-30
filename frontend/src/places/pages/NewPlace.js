@@ -8,13 +8,14 @@ import Spinner from "../../shared/components/UIElements/LoadingSpinner";
 import { VALIDATOR_REQUIRE, VALIDATOR_MINLENGTH } from '../../shared/utils/validators';
 import { useFrom } from "../../shared/hooks/form-hook";
 import { useHttpClient } from "../../shared/hooks/http-hook";
-import {AuthContext} from "../../shared/context/auth-context";
+import { AuthContext } from "../../shared/context/auth-context";
+import ImageUpload from "../../shared/components/FormElements/ImageUpload";
 
 import './PlaceForm.css';
 
 const NewPlace = () => {
 	const [isLoading,  error , sendRequest, clearError ] = useHttpClient();
-	const { userId } = useContext(AuthContext)
+	const { userId } = useContext(AuthContext);
 	const [formState , inputHandler] = useFrom(
 		{
 			title: {
@@ -28,6 +29,10 @@ const NewPlace = () => {
 			address:{
 				value: "",
 				isValid: false
+			},
+			image:{
+				value: "",
+				isValid: false
 			}
 		}, false
 	);
@@ -37,16 +42,13 @@ const NewPlace = () => {
 	const placeSubmitHandler = async (event) => {
 		event.preventDefault();
 		try{
-			await sendRequest("http://localhost:5000/api/v1/places", 'POST', JSON.stringify({
-				title: formState.inputs.title.value,
-				description: formState.inputs.description.value,
-				address: formState.inputs.address.value,
-				image: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/NYC_Empire_State_Building.jpg/640px-NYC_Empire_State_Building.jpg",
-				creator: userId
-			}), {
-				'Content-Type':"application/json"
-			})
-
+			const formData = new FormData();
+			formData.append("title", formState.inputs.title.value)
+			formData.append("address", formState.inputs.address.value)
+			formData.append("description", formState.inputs.description.value)
+			formData.append("image", formState.inputs.image.value)
+			formData.append("creator", userId)
+			await sendRequest("http://localhost:5000/api/v1/places", 'POST', formData)
 			//redirect user to different page
 			history.push('/')
 
@@ -83,6 +85,7 @@ const NewPlace = () => {
 				validators={[ VALIDATOR_REQUIRE() ]}
 				onInput={inputHandler}
 			/>
+			<ImageUpload id="image" onInput={inputHandler} errorText="Please provid an image" />
 			<Button type='submit' disabled={!formState.isValid}>
 				Add place
 			</Button>

@@ -1,6 +1,9 @@
 const express = require("express");
 const { check } = require("express-validator");
 
+const fileUploader = require("../middleware/file-uploader");
+
+
 const router = express.Router();
 
 const {
@@ -14,7 +17,9 @@ const {
 router.get("/:id", getPlaceById);
 router.get("/user/:id", getPlaceByUserId);
 
-router.post("/",[
+router.post("/",  
+fileUploader.single("image"),
+[
     check("title").not().isEmpty(),
     check("description").isLength({min : 5}),
     check("address").not().isEmpty()
