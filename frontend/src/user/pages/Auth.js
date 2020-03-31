@@ -70,7 +70,7 @@ const Auth = ()=>{
                 {
                     "Content-Type": "application/json"
                 })
-                login(data._id.toString())
+                login(data.userId,data.token)
             }catch(err){}
         }else{
             try{
@@ -80,7 +80,7 @@ const Auth = ()=>{
                 formData.append("password", formState.inputs.password.value)
                 formData.append("image", formState.inputs.image.value)
                 const data = await sendRequest("http://localhost:5000/api/v1/users/signup", "POST",formData)
-                login(data._id.toString())
+                login(data.userId, data.token)
             }catch(err){}
         }
     }
