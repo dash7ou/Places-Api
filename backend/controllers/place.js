@@ -108,6 +108,9 @@ exports.updatePalace = async (req ,res, next)=>{
         },
         params:{
             id: placeId
+        },
+        userData: {
+            _id: userId
         }
     } = req;
 
@@ -123,6 +126,10 @@ exports.updatePalace = async (req ,res, next)=>{
 
 
     if(!place) return next(new HttpError("There is no place with this id", 404));
+
+    if(place.creator.toString() === userId.toString()){
+        return next(new HttpError("You are not allowed to edit this place.", 401));
+    }
 
     place.title= title;
     place.description = description;
@@ -140,6 +147,9 @@ exports.deletePlace = async (req, res, next)=>{
     const {
         params: {
             id: placeId
+        },
+        userData: {
+            _id: userId
         }
     } = req;
 
@@ -152,6 +162,10 @@ exports.deletePlace = async (req, res, next)=>{
     }
 
     if(!place) return next(new HttpError("There is no place with this id", 404));
+
+    if(place.creator.toString() === userId.toString()){
+        return next(new HttpError("You are not allowed to edit this place.", 401));
+    }
 
     const imagePath = place.image;
     try{
