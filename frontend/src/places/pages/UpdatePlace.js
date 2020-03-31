@@ -16,7 +16,7 @@ import "./PlaceForm.css"
 const UpdatePlace = () => {
 	const placeId = useParams().placeId;
 	const [ isLoading , error , sendRequest , clearError ] = useHttpClient();
-	const { userId } = useContext(AuthContext);
+	const { userId, token } = useContext(AuthContext);
 
 	const [ fromState, inputHandler, setFromData ] = useFrom({
 		title:{
@@ -63,7 +63,8 @@ const UpdatePlace = () => {
 				title: fromState.inputs.title.value,
 				description:fromState.inputs.description.value
 			}),{
-				"Content-Type":"application/json"
+				"Content-Type":"application/json",
+				Authorization: 'Bearer '+ token
 			})
 			history.push(`/${userId}/places`)
 		}catch(err){}

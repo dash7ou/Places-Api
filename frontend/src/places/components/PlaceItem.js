@@ -1,5 +1,4 @@
 import React, { useState, Fragment, useContext } from "react";
-import { useHistory } from "react-router-dom";
 
 import Card from "../../shared/components/UIElements/Card";
 import Button from "../../shared/components/FormElements/Button";
@@ -13,12 +12,11 @@ import Spinner from "../../shared/components/UIElements/LoadingSpinner";
 import "./PlaceItem.css"
 
 const PlaceItem = ({ place: {_id, image, title, description, address, creator, location }, onDeletePlaceHandler})=>{
-    const { isLoggedIn , userId} = useContext(AuthContext)
+    const { isLoggedIn , userId, token} = useContext(AuthContext)
     const [showMap, changeStateShow] = useState(false);
     const [showConfirm , changeConfirmState ] = useState(false);
     const [ isLoading , error , sendRequest, clearError ] = useHttpClient();
 
-    const history = useHistory()
 
     const onChangeStateShow = ()=>{
         changeStateShow(!showMap)
@@ -31,7 +29,9 @@ const PlaceItem = ({ place: {_id, image, title, description, address, creator, l
     const confirmDeleteHandler = async ()=>{
         onCahngeStateShowConfirm()
         try{
-            await sendRequest(`http://localhost:5000/api/v1/places/${_id.toString()}`, 'DELETE');
+            await sendRequest(`http://localhost:5000/api/v1/places/${_id.toString()}`, 'DELETE' ,{}, {
+				Authorization: 'Bearer '+ token
+            });
         }catch(err){}
         onDeletePlaceHandler(_id)
     }
