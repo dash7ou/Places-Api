@@ -84,6 +84,13 @@ exports.login = async (req , res , next)=>{
     const passwordIsMatch = await user.matchPassword(password);
     if(!passwordIsMatch) return next(new HttpError("Invalid email or password", 401));
 
+    let token;
+    try{
+        token = user.getSignedJwtToken();
+    }catch(err){
+        return next(new HttpError("There are problem in login try again", 500))
+    }
 
-    res.status(200).send(user);
+
+    res.status(200).send({userId: user._id.toString(), email: user.email, token});
 }
