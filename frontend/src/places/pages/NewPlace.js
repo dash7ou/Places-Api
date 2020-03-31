@@ -15,7 +15,7 @@ import './PlaceForm.css';
 
 const NewPlace = () => {
 	const [isLoading,  error , sendRequest, clearError ] = useHttpClient();
-	const { userId, token } = useContext(AuthContext);
+	const { token } = useContext(AuthContext);
 	const [formState , inputHandler] = useFrom(
 		{
 			title: {
@@ -47,7 +47,6 @@ const NewPlace = () => {
 			formData.append("address", formState.inputs.address.value)
 			formData.append("description", formState.inputs.description.value)
 			formData.append("image", formState.inputs.image.value)
-			formData.append("creator", userId)
 			await sendRequest("http://localhost:5000/api/v1/places", 'POST', formData, {
 				Authorization: 'Bearer '+ token
 			})

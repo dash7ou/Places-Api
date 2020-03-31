@@ -8,7 +8,7 @@ import BackDrop from "../UIElements/Backdrop"
 
 import "./MainNavigation.css";
 
-const MainNavigation = ({})=>{
+const MainNavigation = ()=>{
     const [ sideDrawer , changeSideDrawerState ] = useState(false);
     const onOpenDrawer = ()=>{
         changeSideDrawerState(!sideDrawer)
