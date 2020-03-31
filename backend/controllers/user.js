@@ -35,6 +35,7 @@ exports.signup = async (req , res, next)=>{
     try {
         userExist = await User.findOne({email})
     } catch (error) {
+        console.log(error)
         return next(new HttpError("There are problem in signup try again", 500))
     }
 
@@ -43,10 +44,12 @@ exports.signup = async (req , res, next)=>{
         return next(error);
     }
     let user;
+
     try{
         user = new User({name, email, password , image:req.file.path, places:[]});
         await user.save();
     }catch(err){
+        console.log(err)
         return next(new HttpError("There are problem in signup try again", 500))
     }
 
