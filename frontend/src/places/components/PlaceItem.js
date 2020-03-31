@@ -34,7 +34,6 @@ const PlaceItem = ({ place: {_id, image, title, description, address, creator, l
             await sendRequest(`http://localhost:5000/api/v1/places/${_id.toString()}`, 'DELETE');
         }catch(err){}
         onDeletePlaceHandler(_id)
-
     }
 
     return (

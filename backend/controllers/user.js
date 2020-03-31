@@ -71,14 +71,17 @@ exports.login = async (req , res , next)=>{
     let user;
     try {
         user = await User.findOne({
-            email,
-            password
+            email
         });
     } catch (error) {
         return next(new HttpError("There are problem in login try again", 500))
     }
 
     if(!user) return next(new HttpError("Invalid email or password", 401));
+
+    const passwordIsMatch = await user.matchPassword(password);
+    if(!passwordIsMatch) return next(new HttpError("Invalid email or password", 401));
+
 
     res.status(200).send(user);
 }
