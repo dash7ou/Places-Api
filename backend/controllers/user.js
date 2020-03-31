@@ -44,16 +44,18 @@ exports.signup = async (req , res, next)=>{
         return next(error);
     }
     let user;
+    let token;
 
     try{
         user = new User({name, email, password , image:req.file.path, places:[]});
         await user.save();
+        token = user.getSignedJwtToken();
     }catch(err){
         console.log(err)
         return next(new HttpError("There are problem in signup try again", 500))
     }
 
-    res.status(201).send(user)
+    res.status(201).send({userId: user._id.toString(), email: user.email, token})
 }
 exports.login = async (req , res , next)=>{
     const errors = validationResult(req);
