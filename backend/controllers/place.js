@@ -164,7 +164,7 @@ exports.deletePlace = async (req, res, next)=>{
     if(!place) return next(new HttpError("There is no place with this id", 404));
 
     if(place.creator.toString() === userId.toString()){
-        return next(new HttpError("You are not allowed to edit this place.", 401));
+        return next(new HttpError("You are not allowed to delete this place.", 401));
     }
 
     const imagePath = place.image;
